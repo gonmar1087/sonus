@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "login.h"
+#include "registro.h"
 void menu_usuario()
 {
     int opcion;
@@ -56,5 +57,46 @@ void menu_usuario()
             scanf("%d",&opcion);
         }
     }
+}
+FILE *Abrirarchivo(char nombreArchivo[])
+{
+    FILE *archivo=fopen(nombreArchivo,"r+b");
+    return archivo;
+}
+Artista buscarPorNombre(FILE *archivo,char artistaBuscar[])
+{
+    Artista leerArtista;
+    while(fread(&leerArtista,sizeof(Artista),1,archivo)==1)
+    {
+        if(strcmp(artistaBuscar,leerArtista.nombre)==0)
+           {
+               return leerArtista;
+           }
+    }
+    Artista noEncontrado;
+    noEncontrado.IdArtista=-1;
+    return noEncontrado;
+}
+void mostrarAlbumes(Artista p)
+{
 
+}
+void verCatalogoporArtista(const char nombreArchivo[])
+{
+    char artistaBuscar[50];
+    printf("Ingrese artista: ");
+    fgets(artistaBuscar,50,stdin);
+    FILE *archivo=Abrirarchivo(nombreArchivo);
+    if(archivo==NULL)
+    {
+        printf("Error al abrir archivo\n");
+        return;
+    }
+    Artista encontrado=buscarPorNombre(archivo,artistaBuscar);
+    if(encontrado.IdArtista==-1)
+    {
+        printf("Artista No Encontrado");
+        return;
+    }
+    mostrarAlbumes(encontrado);
 }
